@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="note.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Google Keep </title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-item active">
+            <i class="fas fa-lightbulb"></i>
+            <span>Notes</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-bell"></i>
+            <span>Rappels</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-tag"></i>
+            <span>Labels</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-archive"></i>
+            <span>Archive</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-trash"></i>
+            <span>Corbeille</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="menu-icon">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="logo">
+                    <img src="" alt="Keep">
+                    <span>Keep</span>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher...">
+                </div>
+                <div class="view-option">
+                    <i class="fas fa-th-large" id="gridView"></i>
+                    <i class="fas fa-bars" id="listView"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="note-input-container">
+            <div class="note-input collapsed">
+                <input type="text" id="noteTitleInput" placeholder="Titre">
+                <textarea id="noteInput" placeholder="Créer une note..." onclick="expandNoteInput()"></textarea>
+                <div class="note-tools hidden">
+                    <div class="tool-icons">
+                        <i class="fas fa-palette" id="colorPicker"></i>
+                        <i class="fas fa-image"></i>
+                        <i class="fas fa-list"></i>
+                        <i class="fas fa-undo"></i>
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <button id="addNoteBtn">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-palette hidden">
+            <div class="color-option" data-color="#ffffff"></div>
+            <div class="color-option" data-color="#f28b82"></div>
+            <div class="color-option" data-color="#fbbc04"></div>
+            <div class="color-option" data-color="#fff475"></div>
+            <div class="color-option" data-color="#ccff90"></div>
+            <div class="color-option" data-color="#a7ffeb"></div>
+            <div class="color-option" data-color="#cbf0f8"></div>
+            <div class="color-option" data-color="#aecbfa"></div>
+            <div class="color-option" data-color="#d7aefb"></div>
+            <div class="color-option" data-color="#fdcfe8"></div>
+        </div>
+
+        <div id="notesContainer" class="grid-view"></div>
+    </div>
+    <script src="note.js"></script>
+</body>
+</html>
