@@ -1,36 +1,17 @@
-
+// Variables globales
 let notes = [];
 let currentNoteColor = '#ffffff';
-let isGridView = true;
 
-// je recupére les DOM éléments
+// Éléments du DOM
 const noteInput = document.getElementById('noteInput');
 const noteTitleInput = document.getElementById('noteTitleInput');
 const addNoteBtn = document.getElementById('addNoteBtn');
-const notesContainer = document.getElementById('notesContainer');
+const notesContainer = document.getElementById('notes-container');
 const colorPicker = document.getElementById('colorPicker');
 const colorPalette = document.querySelector('.color-palette');
 const searchInput = document.getElementById('searchInput');
-const gridViewBtn = document.getElementById('gridView');
-const listViewBtn = document.getElementById('listView');
-const menuIcon = document.querySelector('.menu-icon');
-const sidebar = document.querySelector('.sidebar');
-const noteInputContainer = document.querySelector('.note-input');
-const noteTools = document.querySelector('.note-tools');
 
-// Expand note input
-function expandNoteInput() {
-    noteInputContainer.classList.remove('collapsed');
-    noteTools.classList.remove('hidden');
-}
-
-// Toggle sidebar
-menuIcon.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-    document.querySelector('.container').classList.toggle('sidebar-collapsed');
-});
-
-
+// Gestionnaire de couleurs
 colorPicker.addEventListener('click', (e) => {
     const rect = colorPicker.getBoundingClientRect();
     colorPalette.style.top = `${rect.bottom + 5}px`;
@@ -39,171 +20,148 @@ colorPicker.addEventListener('click', (e) => {
     e.stopPropagation();
 });
 
-document.addEventListener('click', (e) => {
-    if (!noteInputContainer.contains(e.target)) {
-        noteInputContainer.classList.add('collapsed');
-        noteTools.classList.add('hidden');
-    }
+document.addEventListener('click', () => {
     colorPalette.classList.add('hidden');
 });
 
 document.querySelectorAll('.color-option').forEach(option => {
-    const color = option.dataset.color;
-    option.style.backgroundColor = color;
+    option.style.backgroundColor = option.dataset.color;
     option.addEventListener('click', () => {
-        currentNoteColor = color;
-        noteInputContainer.style.backgroundColor = color;
+        currentNoteColor = option.dataset.color;
+        noteInput.style.backgroundColor = currentNoteColor;
     });
 });
 
-// fonctionnalité pour la barre de recher
+// Création de note
+function createNote(title, content, color) {
+    return {
+        id: Date.now(),
+        title,
+        content,
+        color,
+        createdAt: new Date().toISOString()
+    };
+}
+
+function createNoteElement(note) {
+    const noteElement = document.createElement('div');
+    noteElement.className = 'note';
+    noteElement.style.backgroundColor = note.color;
+
+    const title = document.createElement('div');
+    title.className = 'note-title';
+    title.textContent = note.title;
+
+    const content = document.createElement('div');
+    content.className = 'note-content';
+    content.textContent = note.content;
+
+    const actions = document.createElement('div');
+    actions.className = 'note-actions';
+
+    const editBtn = document.createElement('i');
+    editBtn.className = 'fas fa-edit';
+    editBtn.title = 'Modifier';
+    editBtn.onclick = () => editNote(note.id);
+
+    const colorBtn = document.createElement('i');
+    colorBtn.className = 'fas fa-palette';
+    colorBtn.title = 'Couleur';
+    colorBtn.onclick = () => changeNoteColor(note.id);
+
+    const deleteBtn = document.createElement('i');
+    deleteBtn.className = 'fas fa-trash';
+    deleteBtn.title = 'Supprimer';
+    deleteBtn.onclick = () => deleteNote(note.id);
+
+    actions.appendChild(editBtn);
+    actions.appendChild(colorBtn);
+    actions.appendChild(deleteBtn);
+
+    noteElement.appendChild(title);
+    noteElement.appendChild(content);
+    noteElement.appendChild(actions);
+
+    return noteElement;
+}
+
+// Ajout d'une note
+addNoteBtn.addEventListener('click', () => {
+    const title = noteTitleInput.value.trim();
+    const content = noteInput.value.trim();
+
+    if (content || title) {
+        const note = createNote(title, content, currentNoteColor);
+        notes.unshift(note);
+        renderNotes();
+        resetNoteInput();
+        saveNotes();
+    }
+});
+
+// Gestion des notes
+function renderNotes() {
+    notesContainer.innerHTML = '';
+    notes.forEach(note => {
+        const noteElement = createNoteElement(note);
+        notesContainer.appendChild(noteElement);
+    });
+}
+
+function resetNoteInput() {
+    noteTitleInput.value = '';
+    noteInput.value = '';
+    currentNoteColor = '#ffffff';
+    noteInput.style.backgroundColor = '#ffffff';
+}
+
+function editNote(noteId) {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+        noteTitleInput.value = note.title;
+        noteInput.value = note.content;
+        currentNoteColor = note.color;
+        noteInput.style.backgroundColor = note.color;
+        notes = notes.filter(n => n.id !== noteId);
+        renderNotes();
+        saveNotes();
+        noteTitleInput.focus();
+    }
+}
+
+function deleteNote(noteId) {
+    notes = notes.filter(note => note.id !== noteId);
+    renderNotes();
+    saveNotes();
+}
+
+function changeNoteColor(noteId) {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+        const colors = ['#ffffff', '#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8'];
+        const currentIndex = colors.indexOf(note.color);
+        const nextIndex = (currentIndex + 1) % colors.length;
+        note.color = colors[nextIndex];
+        renderNotes();
+        saveNotes();
+    }
+}
+
+// Recherche
 searchInput.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredNotes = notes.filter(note => 
         note.title.toLowerCase().includes(searchTerm) || 
         note.content.toLowerCase().includes(searchTerm)
     );
-    renderNotes(filteredNotes);
-});
-
-// Note creation
-addNoteBtn.addEventListener('click', () => {
-    const title = noteTitleInput.value.trim();
-    const content = noteInput.value.trim();
-    
-    if (content || title) {
-        const note = {
-            id: Date.now(),
-            title,
-            content,
-            color: currentNoteColor,
-            isPinned: false,
-            isArchived: false,
-            createdAt: new Date().toISOString()
-        };
-        
-        notes.unshift(note);
-        saveNotes();
-        resetNoteInput();
-        renderNotes(notes);
-    }
-    
-    // Collapse the note input after saving
-    noteInputContainer.classList.add('collapsed');
-    noteTools.classList.add('hidden');
-});
-
-function resetNoteInput() {
-    noteTitleInput.value = '';
-    noteInput.value = '';
-    currentNoteColor = '#ffffff';
-    noteInputContainer.style.backgroundColor = '#ffffff';
-}
-
-function createNoteElement(note) {
-    const noteDiv = document.createElement('div');
-    noteDiv.classList.add('note');
-    noteDiv.style.backgroundColor = note.color;
-    
-    const pinIcon = document.createElement('i');
-    pinIcon.classList.add('fas', 'fa-thumbtack', 'pinned');
-    if (note.isPinned) pinIcon.classList.add('active');
-    
-    noteDiv.innerHTML = `
-        ${note.title ? `<div class="note-title">${note.title}</div>` : ''}
-        <div class="note-content">${note.content}</div>
-        <div class="note-actions">
-            <i class="fas fa-palette" onclick="changeNoteColor(${note.id})"></i>
-            <i class="fas fa-archive" onclick="archiveNote(${note.id})"></i>
-            <i class="fas fa-trash" onclick="deleteNote(${note.id})"></i>
-        </div>
-    `;
-    
-    noteDiv.appendChild(pinIcon);
-    pinIcon.addEventListener('click', () => togglePin(note.id));
-    
-    return noteDiv;
-}
-
-function renderNotes(notesToRender) {
     notesContainer.innerHTML = '';
-    
-    const pinnedNotes = notesToRender.filter(note => note.isPinned && !note.isArchived);
-    const unpinnedNotes = notesToRender.filter(note => !note.isPinned && !note.isArchived);
-    
-    if (pinnedNotes.length > 0) {
-        const pinnedSection = document.createElement('div');
-        pinnedSection.innerHTML = '<h2>Notes épinglées</h2>';
-        pinnedNotes.forEach(note => {
-            pinnedSection.appendChild(createNoteElement(note));
-        });
-        notesContainer.appendChild(pinnedSection);
-    }
-    
-    if (unpinnedNotes.length > 0) {
-        const unpinnedSection = document.createElement('div');
-        if (pinnedNotes.length > 0) {
-            unpinnedSection.innerHTML = '<h2>Autres notes</h2>';
-        }
-        unpinnedNotes.forEach(note => {
-            unpinnedSection.appendChild(createNoteElement(note));
-        });
-        notesContainer.appendChild(unpinnedSection);
-    }
-}
+    filteredNotes.forEach(note => {
+        const noteElement = createNoteElement(note);
+        notesContainer.appendChild(noteElement);
+    });
+});
 
-// Note actions
-function togglePin(noteId) {
-    const note = notes.find(n => n.id === noteId);
-    if (note) {
-        note.isPinned = !note.isPinned;
-        saveNotes();
-        renderNotes(notes);
-    }
-}
-
-function archiveNote(noteId) {
-    const note = notes.find(n => n.id === noteId);
-    if (note) {
-        note.isArchived = true;
-        saveNotes();
-        renderNotes(notes);
-    }
-}
-
-function deleteNote(noteId) {
-    notes = notes.filter(note => note.id !== noteId);
-    saveNotes();
-    renderNotes(notes);
-}
-
-function changeNoteColor(noteId) {
-    const note = notes.find(n => n.id === noteId);
-    if (note) {
-        const colorPaletteClone = colorPalette.cloneNode(true);
-        colorPaletteClone.classList.remove('hidden');
-        const noteElement = event.target.closest('.note');
-        colorPaletteClone.style.position = 'absolute';
-        colorPaletteClone.style.top = `${event.clientY}px`;
-        colorPaletteClone.style.left = `${event.clientX}px`;
-        
-        colorPaletteClone.querySelectorAll('.color-option').forEach(option => {
-            const color = option.dataset.color;
-            option.style.backgroundColor = color;
-            option.addEventListener('click', () => {
-                note.color = color;
-                saveNotes();
-                renderNotes(notes);
-                document.body.removeChild(colorPaletteClone);
-            });
-        });
-        
-        document.body.appendChild(colorPaletteClone);
-        event.stopPropagation();
-    }
-}
-
-// Local storage
+// Stockage local
 function saveNotes() {
     localStorage.setItem('notes', JSON.stringify(notes));
 }
@@ -212,9 +170,9 @@ function loadNotes() {
     const savedNotes = localStorage.getItem('notes');
     if (savedNotes) {
         notes = JSON.parse(savedNotes);
-        renderNotes(notes);
+        renderNotes();
     }
 }
 
-// Initialize
+// Initialisation
 loadNotes();

@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -6,20 +5,19 @@
 }
 
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background-color: #ffffff;
+    font-family: Arial, sans-serif;
     display: flex;
+    background-color: #f0f0f0;
 }
 
 .sidebar {
     width: 280px;
     height: 100vh;
-    background-color: #ffffff;
+    background-color: white;
     padding: 20px 0;
     position: fixed;
     left: 0;
     top: 0;
-    border-right: 1px solid #e0e0e0;
 }
 
 .sidebar-item {
@@ -27,195 +25,121 @@ body {
     display: flex;
     align-items: center;
     cursor: pointer;
-    border-radius: 0 25px 25px 0;
-    margin-right: 10px;
-}
-
-.sidebar-item:hover {
-    background-color: #f1f3f4;
-}
-
-.sidebar-item.active {
-    background-color: #feefc3;
 }
 
 .sidebar-item i {
     margin-right: 15px;
-    font-size: 18px;
     color: #5f6368;
 }
 
-.container {
+.sidebar-item.active {
+    background-color: #feefc3;
+    border-radius: 0 25px 25px 0;
+}
+
+.main-content {
     margin-left: 280px;
     width: calc(100% - 280px);
     padding: 20px;
 }
 
 header {
-    position: sticky;
-    top: 0;
     background-color: white;
-    z-index: 100;
-    padding: 8px 0;
+    padding: 8px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .header-top {
     display: flex;
     align-items: center;
-    padding: 8px;
+    gap: 20px;
 }
 
 .menu-icon {
-    padding: 12px;
     cursor: pointer;
-    border-radius: 50%;
-}
-
-.menu-icon:hover {
-    background-color: #f1f3f4;
+    padding: 8px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    margin-right: 40px;
+    gap: 8px;
 }
 
 .logo img {
-    width: 40px;
-    margin-right: 8px;
-}
-
-.logo span {
-    font-size: 22px;
-    color: #5f6368;
+    height: 40px;
 }
 
 .search-box {
     flex: 1;
-    max-width: 720px;
-    background-color: #f1f3f4;
-    border-radius: 8px;
-    padding: 12px 20px;
     display: flex;
     align-items: center;
+    background-color: #f1f3f4;
+    padding: 8px 16px;
+    border-radius: 8px;
+    gap: 8px;
 }
 
 .search-box input {
     border: none;
     background: none;
-    flex: 1;
-    margin-left: 10px;
-    font-size: 16px;
-    color: #202124;
-}
-
-.search-box input:focus {
     outline: none;
-}
-
-.view-option {
-    margin-left: 20px;
-}
-
-.view-option i {
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 50%;
-}
-
-.view-option i:hover {
-    background-color: #f1f3f4;
-}
-
-.note-input-container {
-    max-width: 600px;
-    margin: 32px auto;
+    width: 100%;
+    font-size: 16px;
 }
 
 .note-input {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
-    padding: 20px;
+    padding: 16px;
     margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .note-input input,
 .note-input textarea {
     width: 100%;
     border: none;
-    font-size: 16px;
-    padding: 4px;
-    margin-bottom: 12px;
-}
-
-.note-input input:focus,
-.note-input textarea:focus {
     outline: none;
+    font-size: 16px;
+    margin-bottom: 8px;
 }
 
 .note-input textarea {
-    min-height: 100px;
+    min-height: 80px;
     resize: none;
-}
-
-.note-input.collapsed #noteTitleInput {
-    display: none;
-}
-
-.note-input.collapsed .note-tools {
-    display: none;
-}
-
-.note-input.collapsed textarea {
-    height: 46px;
-    cursor: text;
 }
 
 .note-tools {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 12px;
-}
-
-.note-tools.hidden {
-    display: none;
-}
-
-.tool-icons i {
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 50%;
-    color: #5f6368;
-}
-
-.tool-icons i:hover {
-    background-color: #f1f3f4;
+    margin-top: 16px;
 }
 
 #addNoteBtn {
-    padding: 8px 24px;
-    background-color: transparent;
+    background-color: #feefc3;
     border: none;
+    padding: 8px 24px;
     border-radius: 4px;
     cursor: pointer;
-    color: #5f6368;
+    font-size: 14px;
 }
 
 #addNoteBtn:hover {
-    background-color: #f1f3f4;
+    background-color: #fee7a0;
 }
 
 .color-palette {
     position: absolute;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
+    background-color: white;
     padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 4px;
 }
 
@@ -226,75 +150,59 @@ header {
 .color-option {
     width: 30px;
     height: 30px;
-    border-radius: 50%;
+    border-radius: 4px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
     border: 1px solid #e0e0e0;
 }
 
-#notesContainer {
-    margin-top: 20px;
-    display: grid;
-    gap: 20px;
-    padding: 20px 0;
-}
-
-.grid-view {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-}
-
-.list-view {
-    grid-template-columns: 1fr;
-    max-width: 600px;
-    margin: 0 auto;
+#notes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 45px;
 }
 
 .note {
+    
+    width: 240px;
     background-color: white;
     border-radius: 8px;
-    border: 1px solid #e0e0e0;
     padding: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     position: relative;
-    transition: box-shadow 0.2s ease-in-out;
-}
-
-.note:hover {
-    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
 }
 
 .note-title {
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .note-content {
     font-size: 14px;
     color: #202124;
-    margin-bottom: 12px;
+    margin-bottom: 32px;
 }
 
 .note-actions {
-    display: none;
     position: absolute;
     bottom: 8px;
     left: 8px;
     right: 8px;
-    padding: 8px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 .note:hover .note-actions {
-    display: flex;
-    justify-content: space-around;
+    opacity: 1;
 }
 
 .note-actions i {
     padding: 8px;
-    cursor: pointer;
     border-radius: 50%;
+    cursor: pointer;
     color: #5f6368;
 }
 
@@ -302,14 +210,3 @@ header {
     background-color: #f1f3f4;
 }
 
-.pinned {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    color: #5f6368;
-    cursor: pointer;
-}
-
-.pinned.active {
-    color: #000;
-}
